@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="font-size: large;">3D Shape Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9;
+            color: black;
+        }
+        h1 {
+            text-align: center;
+            font-size: 35;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #000000; 
+        }
+        button {
+            background-color: #66bb6a;
+            color: white;
+            cursor: pointer;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            color: #770000;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: #66bb6a;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .home-button:hover {
+            background-color: #388e3c;
+        }
+        #dynamic_inputs {
+            display: none;
+        }
+    </style>
+    <script>
+        function toggle3DInputs() {
+            const dynamicInputs = document.getElementById('dynamic_inputs');
+            dynamicInputs.innerHTML = '';
+            dynamicInputs.style.display = 'none';
+
+            const selectedShape = document.getElementById("shape").value;
+
+            const inputTemplates = {
+                cube: `
+                    <label for="cube_length">Length:</label>
+                    <input type="number" name="cube_length" id="cube_length" step="any" 
+                    value="{{ inputs.get('cube_length', '') }}" required><br>
+                `,
+                cylinder: `
+                    <label for="cylinder_radius">Radius:</label>
+                    <input type="number" name="cylinder_radius" id="cylinder_radius" step="any" 
+                    value="{{ inputs.get('cylinder_radius', '') }}" required><br>
+                    <label for="cylinder_height">Height:</label>
+                    <input type="number" name="cylinder_height" id="cylinder_height" step="any" 
+                    value="{{ inputs.get('cylinder_height', '') }}" required><br>
+                `,
+                rectangular_prism: `
+                    <label for="rectangular_prism_length">Length:</label>
+                    <input type="number" name="rectangular_prism_length" id="rectangular_prism_length" step="any" 
+                    value="{{ inputs.get('rectangular_prism_length', '') }}" required><br>
+                    <label for="rectangular_prism_width">Width:</label>
+                    <input type="number" name="rectangular_prism_width" id="rectangular_prism_width" step="any" 
+                    value="{{ inputs.get('rectangular_prism_width', '') }}" required><br>
+                    <label for="rectangular_prism_height">Height:</label>
+                    <input type="number" name="rectangular_prism_height" id="rectangular_prism_height" step="any" 
+                    value="{{ inputs.get('rectangular_prism_height', '') }}" required><br>
+                `,
+                triangular_prism: `
+                    <label for="triangular_prism_length">Length:</label>
+                    <input type="number" name="triangular_prism_length" id="triangular_prism_length" step="any" 
+                    value="{{ inputs.get('triangular_prism_length', '') }}" required><br>
+                    <label for="triangular_prism_width">Width:</label>
+                    <input type="number" name="triangular_prism_width" id="triangular_prism_width" step="any" 
+                    value="{{ inputs.get('triangular_prism_width', '') }}" required><br>
+                    <label for="triangular_prism_height">Height:</label>
+                    <input type="number" name="triangular_prism_height" id="triangular_prism_height" step="any" 
+                    value="{{ inputs.get('triangular_prism_height', '') }}" required><br>
+                `,
+                cone: `
+                    <label for="cone_radius">Radius:</label>
+                    <input type="number" name="cone_radius" id="cone_radius" step="any" 
+                    value="{{ inputs.get('cone_radius', '') }}" required><br>
+                    <label for="cone_height">Height:</label>
+                    <input type="number" name="cone_height" id="cone_height" step="any" 
+                    value="{{ inputs.get('cone_height', '') }}" required><br>
+                `,
+                sphere: `
+                    <label for="sphere_radius">Radius:</label>
+                    <input type="number" name="sphere_radius" id="sphere_radius" step="any" 
+                    value="{{ inputs.get('sphere_radius', '') }}" required><br>
+                `,
+                triangular_pyramid: `
+                    <label for="triangular_pyramid_base">Base of Triangle:</label>
+                    <input type="number" name="triangular_pyramid_base" id="triangular_pyramid_base" step="any" 
+                    value="{{ inputs.get('triangular_pyramid_base', '') }}" required><br>
+                    <label for="triangular_pyramid_height_base">Height of Triangle:</label>
+                    <input type="number" name="triangular_pyramid_height_base" id="triangular_pyramid_height_base" step="any" 
+                    value="{{ inputs.get('triangular_pyramid_height_base', '') }}" required><br>
+                    <label for="triangular_pyramid_height">Height of Pyramid:</label>
+                    <input type="number" name="triangular_pyramid_height" id="triangular_pyramid_height" step="any" 
+                    value="{{ inputs.get('triangular_pyramid_height', '') }}" required><br>
+                `,
+                rectangular_pyramid: `
+                    <label for="rectangular_pyramid_base">Base Length:</label>
+                    <input type="number" name="rectangular_pyramid_base" id="rectangular_pyramid_base" step="any" 
+                    value="{{ inputs.get('rectangular_pyramid_base', '') }}" required><br>
+                    <label for="rectangular_pyramid_height_base">Base Height:</label>
+                    <input type="number" name="rectangular_pyramid_height_base" id="rectangular_pyramid_height_base" step="any" 
+                    value="{{ inputs.get('rectangular_pyramid_height_base', '') }}" required><br>
+                    <label for="rectangular_pyramid_height">Height of Pyramid:</label>
+                    <input type="number" name="rectangular_pyramid_height" id="rectangular_pyramid_height" step="any" 
+                    value="{{ inputs.get('rectangular_pyramid_height', '') }}" required><br>
+                `
+            };
+
+            if (inputTemplates[selectedShape]) {
+                dynamicInputs.innerHTML = inputTemplates[selectedShape];
+                dynamicInputs.style.display = 'block';
+            }
+        }
+
+        window.onload = function () {
+            toggle3DInputs();
+        };
+    </script>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='/';">Home</button>
+    <h1 style="text-align:center;">3D Shape Volume Calculator</h1>
+    
+    <form method="POST" action="/3d">
+        <label for="shape">Select Shape:</label>
+        <select name="shape" id="shape" onchange="toggle3DInputs()">
+            <option value="cube" {% if inputs.get('shape') == 'cube' %}selected{% endif %}>Cube</option>
+            <option value="cylinder" {% if inputs.get('shape') == 'cylinder' %}selected{% endif %}>Cylinder</option>
+            <option value="rectangular_prism" {% if inputs.get('shape') == 'rectangular_prism' %}selected{% endif %}>Rectangular Prism</option>
+            <option value="triangular_prism" {% if inputs.get('shape') == 'triangular_prism' %}selected{% endif %}>Triangular Prism</option>
+            <option value="cone" {% if inputs.get('shape') == 'cone' %}selected{% endif %}>Cone</option>
+            <option value="sphere" {% if inputs.get('shape') == 'sphere' %}selected{% endif %}>Sphere</option>
+            <option value="triangular_pyramid" {% if inputs.get('shape') == 'triangular_pyramid' %}selected{% endif %}>Triangular Pyramid</option>
+            <option value="rectangular_pyramid" {% if inputs.get('shape') == 'rectangular_pyramid' %}selected{% endif %}>Rectangular Pyramid</option>
+        </select><br>
+
+        <div id="dynamic_inputs"></div>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div class="result">
+        {% if result1 %}
+            <p>{{ result1 }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

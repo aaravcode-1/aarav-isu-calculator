@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="font-size: large;">Pythagorean Theorem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9;
+            color: black;
+        }
+        h2 {
+            text-align: center;
+            font-size: 35px;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #000000;
+        }
+        button {
+            background-color: #66bb6a;
+            color: white;
+            cursor: pointer;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            color: #770000;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: #66bb6a;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .home-button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='/';">Home</button>
+    <h2 style="text-align:center;">Pythagorean Theorem Calculator</h2>
+    <form action="/pythagorean" method="post">
+        <label for="side">Choose what to calculate:</label>
+        <select name="side" id="side" required>
+            <option value="1">Hypotenuse</option>
+            <option value="2">Missing Leg</option>
+        </select><br>
+
+        <div id="dynamic_inputs">
+           
+        </div>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div class="result">
+        {% if result2 %}
+            <p>{{ result2 }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const sideSelect = document.getElementById('side');
+        const dynamicInputs = document.getElementById('dynamic_inputs');
+        const inputTemplates = {
+            "1": `<label>Leg 1: <input type="number" name="leg1" step="any" required></label><br>
+                  <label>Leg 2: <input type="number" name="leg2" step="any" required></label><br>`,
+            "2": `<label>Hypotenuse: <input type="number" name="hypotenuse" step="any" required></label><br>
+                  <label>Leg 1: <input type="number" name="leg1" step="any" required></label><br>`
+        };
+
+        sideSelect.addEventListener('change', () => {
+            dynamicInputs.innerHTML = inputTemplates[sideSelect.value] || '';
+        });
+
+        
+        dynamicInputs.innerHTML = inputTemplates[sideSelect.value] || '';
+    </script>
+</body>
+</html>

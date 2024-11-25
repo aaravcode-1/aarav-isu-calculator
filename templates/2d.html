@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="font-size: large;">2D Shape Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9;
+            color: black;
+        }
+        h1 {
+            text-align: center;
+            font-size: 35;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #000000; 
+        }
+        button {
+            background-color: #66bb6a;
+            color: white;
+            cursor: pointer;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            color: #770000;
+        }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background-color: #66bb6a;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .home-button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+    <script>
+        function toggleInputs() {
+            document.getElementById('rectangle-inputs').style.display = 'none';
+            document.getElementById('triangle-inputs').style.display = 'none';
+            document.getElementById('circle-inputs').style.display = 'none';
+
+            var selectedShape = document.getElementById("shape").value;
+
+            if (selectedShape == "1") {
+                document.getElementById('rectangle-inputs').style.display = 'block';
+            } else if (selectedShape == "2") {
+                document.getElementById('triangle-inputs').style.display = 'block';
+            } else if (selectedShape == "3") {
+                document.getElementById('circle-inputs').style.display = 'block';
+            }
+        }
+
+        window.onload = function() {
+            toggleInputs();
+        };
+    </script>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='/';">Home</button>
+    <h1 style="text-align:center;">2D Shape Calculator</h1>
+    
+    <form method="POST">
+        <label for="shape">Select Shape:</label>
+        <select name="shape" id="shape" onchange="toggleInputs()">
+            <option value="1">Rectangle</option>
+            <option value="2">Triangle</option>
+            <option value="3">Circle</option>
+        </select><br>
+
+        <label for="calculation">Select Calculation:</label>
+        <select name="calculation" id="calculation">
+            <option value="area">Area</option>
+            <option value="perimeter">Perimeter</option>
+        </select><br>
+
+        <div id="rectangle-inputs" style="display:none;">
+            <label for="length">Length:</label>
+            <input type="number" name="length" id="length" step="any"><br>
+
+            <label for="width">Width:</label>
+            <input type="number" name="width" id="width" step="any"><br>
+        </div>
+
+        <div id="triangle-inputs" style="display:none;">
+            <label for="height" id="height-label">Height:</label>
+            <input type="number" name="height" id="height" step="any"><br>
+
+            <label for="base" id="base-label">Base:</label>
+            <input type="number" name="base" id="base" step="any"><br>
+
+            <div id="triangle-sides" style="display:none;">
+                <label for="side1">Side 1:</label>
+                <input type="number" name="side1" id="side1" step="any"><br>
+
+                <label for="side2">Side 2:</label>
+                <input type="number" name="side2" id="side2" step="any"><br>
+
+                <label for="side3">Side 3:</label>
+                <input type="number" name="side3" id="side3" step="any"><br>
+            </div>
+        </div>
+
+        <div id="circle-inputs" style="display:none;">
+            <label for="radius_or_diameter">Enter Radius or Diameter:</label>
+            <select name="radius_or_diameter" id="radius_or_diameter">
+                <option value="radius">Radius</option>
+                <option value="diameter">Diameter</option>
+            </select><br>
+
+            <label for="radius">Radius:</label>
+            <input type="number" name="radius" id="radius" step="any"><br>
+
+            <label for="diameter">Diameter:</label>
+            <input type="number" name="diameter" id="diameter" step="any"><br>
+        </div>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div class="result">
+        {% if result %}
+            <p>{{ result }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
